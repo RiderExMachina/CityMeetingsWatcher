@@ -3,16 +3,25 @@
 import os, json
 
 def init():
-    if "vm" in os.popen("hostnamectl | grep Chassis").read():
-        print("Detected running in VM")
-    else:
-        print("Are we running on a desktop?")
+	homeFolder = os.path.expanduser("~")
+	if "vm" in os.popen("hostnamectl | grep Chassis").read():
+        print("Running in a VM, probably a server?")
+		defaultMainFolder = "/srv/government"
+	else:
+        print("Assuming we're running on a PC")
+		defaultMainFolder = f"{homeFolder}/government"
+		
+    configDir = input(f"Where do you want the files to be downloaded to? [default: {defaultMainFolder}]\n\t=>")
+    if configDir == "":
+        configDir = defaultMainFolder
+    print(f"Okay, will download and serve files from {configDir}")
+    
 
 print("Settings File (settings.json) not found!")
-createFile = input("Would you like to create one? [Y/n]\n\t-> ")
+createFile = input("Would you like to create one? [Y/n]\n\t=> ")
 
 if createFile.lower() in ["", "yes", "y"]:
-    init()
+	init()
 else:
-    print("Okay, quitting!")
-    exit()
+	print("Okay, quitting!")
+	exit()
