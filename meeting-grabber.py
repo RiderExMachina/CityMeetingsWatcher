@@ -15,6 +15,12 @@ def checkFolders(destFolder):
     if not os.path.isdir(destFolder):
         os.mkdir(destFolder)
 
+def vidConvert(dlFolder):
+    for folder in os.listdir(dlFolder):
+        audioFolder = os.join(dlFolder, folder, "audio")
+        #for item in os.listdir(f"{dlFolder}/{folder}"):
+        #    if ""
+
 def updateCheck(account, event):
         url = f"https://api.new.livestream.com/accounts/{account}/events/{event}"
         data = requests.get(url).json()
@@ -45,13 +51,17 @@ def infoParse(info):
         if meetingID != prevMeeting:
             updated = True
             print(f"\t- Looks like there was an update! (Current: {meetingID}, Previous: {prevMeeting})")
-            videoURL = f"https://livestream.com/accounts/11220190/events/{event}/videos/{meetingID}"
+            videoURL = f"https://livestream.com/accounts/{account}/events/{event}/videos/{meetingID}"
             os.system(f'yt-dlp -o "{destFolder}/%(upload_date>%Y-%m-%d)s - {name} Meeting.%(ext)s" {videoURL}')
             info["streams"][i]["prev-stream-id"] = str(meetingID)
+        else:
+            print("\t- No update found.")
     if updated:
+        print("\t- Converting video to audio...")
+        vidConvert(dlFolder)
         with open("settings.json", 'w') as settingsFile:
             json.dump(info, settingsFile, indent=4)
-        #    return
+        print("Updated settings.json file with new previous stream ID.")
 
 # url = "https://api.new.livestream.com/accounts/11220190/events/3725902/"
 ## Livestream IDs
