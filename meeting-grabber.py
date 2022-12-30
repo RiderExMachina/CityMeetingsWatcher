@@ -36,6 +36,7 @@ def infoParse(info):
         subFolder = info["streams"][i]["sub-folder"]
         prevMeeting = info["streams"][i]["prev-stream-id"]
         print(f"{name} ({event})")
+        
         ## Make sure folder to download exists
         destFolder = os.path.join(dlFolder, subFolder)
         checkFolders(destFolder)
@@ -51,9 +52,9 @@ def infoParse(info):
     if updated:
         with open("settings.json", 'w') as settingsFile:
             json.dump(info, settingsFile, indent=4)
-        #    return
+    # ffmpeg: -i {video} -map 0 -map -0:v -af silenceremove=1:0:-30db,volume=2 {outfile}
 
-# url = "https://api.new.livestream.com/accounts/11220190/events/3725902/"
+# url = "https://api.new.livestream.com/accounts/11220190/events/3725902"
 ## Livestream IDs
 ##  City Council: 3725902
 ##  URA         : 3725864
@@ -66,6 +67,7 @@ if __name__ == "__main__":
         import setup
         setup()
     else:
+    	print(f"Running script version {version}")
         ## Exported information looks like this:
         # {
         #   "dlFolder": "/srv/government",
