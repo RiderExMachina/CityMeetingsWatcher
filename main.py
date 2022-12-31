@@ -28,10 +28,10 @@ def vidConvert(dlFolder):
             if ".mp4" in vid:
                 infile = os.path.join(currentFolder, vid)
                 outfile = os.path.join(audioFolder, vid.replace("mp4", "mp3"))
-                print(f'\t\t- Converting {vid} to {vid.replace("mp3", "mp3")}')
+                print(f'\t\t\t- Converting {vid} to {vid.replace("mp3", "mp3")}')
                 ## the -n flag automatically answers "no" to any prompts
                 os.system(f'ffmpeg -i "{infile}" -map 0 -map -0:v -af silenceremove=1:0:-30dB,volume=2 "{outfile}" -n')
-                print(f"\t\t- Done!")
+                print(f"\t\t\t- Done!")
 
 def updateCheck(account, event):
         url = f"https://api.new.livestream.com/accounts/{account}/events/{event}"
@@ -53,7 +53,7 @@ def infoParse(info):
         name = info["streams"][i]["name"]
         subFolder = info["streams"][i]["sub-folder"]
         prevMeeting = info["streams"][i]["prev-stream-id"]
-        print(f"{name} ({event})")
+        print(f"\t- {name} ({event})")
 
         ## Make sure folder to download exists
         destFolder = os.path.join(dlFolder, subFolder)
@@ -63,12 +63,12 @@ def infoParse(info):
 
         if meetingID != prevMeeting:
             updated = True
-            print(f"\t- Looks like there was an update! (Current: {meetingID}, Previous: {prevMeeting})")
+            print(f"\t\t- Looks like there was an update! (Current: {meetingID}, Previous: {prevMeeting})")
             videoURL = f"https://livestream.com/accounts/{account}/events/{event}/videos/{meetingID}"
             os.system(f'yt-dlp -o "{destFolder}/%(upload_date>%Y-%m-%d)s - {name} Meeting.%(ext)s" {videoURL}')
             info["streams"][i]["prev-stream-id"] = meetingID
         else:
-            print("\t- No update found.")
+            print("\t\t- No update found.")
     print("\t- Converting video to audio...")
     vidConvert(dlFolder)
     if updated:
@@ -85,19 +85,6 @@ if __name__ == "__main__":
         setup()
     else:
         print(f"Running script version {version}")
-        ## Exported information looks like this:
-        # {
-        #   "dlFolder": "/srv/government",
-        #   "accountID": "123456",
-        #   "streams": {
-        #       "stream-1": {
-        #           "id": "123456",
-        #           "name": "City Council",
-        #           "subFolder": "city-council",
-        #           "prev-stream-id": "0",
-        #       }.
-        #    }
-        #}
         with open("settings.json", "r") as settingsFile:
             info = json.load(settingsFile)
         infoParse(info)
