@@ -81,7 +81,7 @@ def infoParse(info):
 ##  City Council: 3725902
 ##  URA         : 3725864
 ##  Plan & Zone : 6554264
-version = "0.0.5"
+version = "0.1.0"
 if __name__ == "__main__":
     ## Pull cached upload date
     ## Go through setup "wizard" if first run.
