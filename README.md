@@ -39,10 +39,13 @@ Contributions would be helpful. There are a few things I want to do with this sc
 
 ### [Troubleshooting](#troubleshoot)
 Q. I'm on Windows/Mac and I don't know/want to use Linux
+
 A. There's not much I can do for you here. I don't have a Mac and I dislike coding on Windows, so my information is Linux only. Luckily, since the code is Python, everything should mostly be the same, and I'll accept PRs to update Documentation.
 
 Q. Do you have plans to include other sites like Youtube or Facebook?
+
 A. No, not at this time. My city uses Livestream, and because it has a public API, it works best for me.
 
 Q. My version of ffmpeg didn't say it has the silenceremove feature
+
 A. The best answer would be to update ffmpeg, as the silenceremove feature has been included in ffmpeg since 2015. If you're unable to do that for any reason, take out the `silenceremove=1:0:-30dB,` part of code on L#33 (this line will change as the script gets more updates)
