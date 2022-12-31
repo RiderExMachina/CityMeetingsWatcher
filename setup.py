@@ -1,8 +1,9 @@
-## Setup file. Is called from the main Meeting Grabber.py, but can be ran standalone.
-
+# == Setup file == #
+## Is called from the main file, but can be ran standalone.
+## Runs a setup wizard that initializes the settings.json file
 ## Exported information looks something like:
 # {
-#   "dlFolder": "/srv/government",
+#   "dlFolder": "/srv/meetings-archive",
 #   "accountID": "123456",
 #   "streams": {
 #       "stream-1": {
@@ -10,7 +11,7 @@
 #           "name": "City Council",
 #           "subFolder": "city-council",
 #           "prev-stream-id": "0",
-#       }.
+#       },
 #    }
 #}
 import os, json
@@ -47,10 +48,10 @@ def init():
     homeFolder = os.path.expanduser("~")
     if "vm" in os.popen("hostnamectl | grep Chassis").read():
         print("Running in a VM, probably a server?")
-        defaultMainFolder = "/srv/GVT Meeting Archive"
+        defaultMainFolder = "/srv/meetings-archive"
     else:
         print("Assuming we're running on a PC")
-        defaultMainFolder = f"{homeFolder}/GVT Meeting Archive"
+        defaultMainFolder = f"{homeFolder}/meetings-archive"
     ## Get the desired folder from the User and add it to the empty dictionary above
     configDir = getFolder(defaultMainFolder)
     info["dl-dir"] = configDir
@@ -83,9 +84,9 @@ def init():
         feedName = requests.get(feedURL).json()["full_name"].replace("&", "and").replace(" Meetings", "")
         subFolder = feedName.lower().replace(" ", "-")
         print(f"\tReceived feed name of {feedName} and downloading into {configDir}/{subFolder}")
-        ## send the new information to the dictionary above
-        streams[f"stream-{str(feed)}"] = {"id": event, "name": feedName, "sub-folder": subFolder, "prev-stream-id": "0"}
-
+        ## send the new information to a temporary dictionary above
+        streams[f"stream-{str(feed)}"] = {"id": event, "name": feedName, "sub-folder": subFolder, "prev-stream-id": 0}
+    ## send the information from the temporary dictionary to the main one
     info["streams"] = streams
     ## We have all the inforamation we need, now we can write it to the file
     with open("settings.json", "a") as settingsFile:
