@@ -13,13 +13,25 @@ except:
 
 def checkFolders(destFolder):
     if not os.path.isdir(destFolder):
+        print(f"Unable to find {destFolder}. Creating...")
         os.mkdir(destFolder)
+    else:
+        return
 
 def vidConvert(dlFolder):
     for folder in os.listdir(dlFolder):
-        audioFolder = os.join(dlFolder, folder, "audio")
-        #for item in os.listdir(f"{dlFolder}/{folder}"):
-        #    if ""
+        currentFolder = os.path.join(dlFolder, folder)
+        audioFolder = os.path.join(currentFolder, "audio")
+        checkFolders(audioFolder)
+
+        for vid in os.listdir(f"{currentFolder}"):
+            if ".mp4" in vid:
+                infile = os.path.join(currentFolder, vid)
+                outfile = os.path.join(audioFolder, vid.replace("mp4", "mp3"))
+                print(f'\t- Converting {vid} to {vid.replace("mp3", "mp3")}')
+                ## the -n flag automatically answers "no" to any prompts
+                os.system(f'ffmpeg -i "{infile}" -map 0 -map -0:v -af silenceremove=1:0:-30dB,volume=2 "{outfile}" -n')
+                print(f"\t\t- Done!")
 
 def updateCheck(account, event):
         url = f"https://api.new.livestream.com/accounts/{account}/events/{event}"
@@ -42,7 +54,7 @@ def infoParse(info):
         subFolder = info["streams"][i]["sub-folder"]
         prevMeeting = info["streams"][i]["prev-stream-id"]
         print(f"{name} ({event})")
-        
+
         ## Make sure folder to download exists
         destFolder = os.path.join(dlFolder, subFolder)
         checkFolders(destFolder)
@@ -54,17 +66,15 @@ def infoParse(info):
             print(f"\t- Looks like there was an update! (Current: {meetingID}, Previous: {prevMeeting})")
             videoURL = f"https://livestream.com/accounts/{account}/events/{event}/videos/{meetingID}"
             os.system(f'yt-dlp -o "{destFolder}/%(upload_date>%Y-%m-%d)s - {name} Meeting.%(ext)s" {videoURL}')
-            info["streams"][i]["prev-stream-id"] = str(meetingID)
+            info["streams"][i]["prev-stream-id"] = meetingID
         else:
             print("\t- No update found.")
+    print("\t- Converting video to audio...")
+    vidConvert(dlFolder)
     if updated:
-        print("\t- Converting video to audio...")
-        vidConvert(dlFolder)
         with open("settings.json", 'w') as settingsFile:
             json.dump(info, settingsFile, indent=4)
         print("Updated settings.json file with new previous stream ID.")
-    # ffmpeg: -i {video} -map 0 -map -0:v -af silenceremove=1:0:-30db,volume=2 {outfile}
-
 
 # url = "https://api.new.livestream.com/accounts/11220190/events/3725902"
 ## Livestream IDs
@@ -79,7 +89,7 @@ if __name__ == "__main__":
         import setup
         setup()
     else:
-    	print(f"Running script version {version}")
+        print(f"Running script version {version}")
         ## Exported information looks like this:
         # {
         #   "dlFolder": "/srv/government",
