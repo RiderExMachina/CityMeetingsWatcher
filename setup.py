@@ -1,16 +1,16 @@
-## Setup file. Is called from the main Meeting Grabber.py, but could probably be ran standalone.
+## Setup file. Is called from the main Meeting Grabber.py, but can be ran standalone.
 
 ## Exported information looks something like:
 # {
 #   "dlFolder": "/srv/government",
 #   "accountID": "123456",
 #   "streams": {
-#       "stream-1": [{
+#       "stream-1": {
 #           "id": "123456",
 #           "name": "City Council",
 #           "subFolder": "city-council",
 #           "prev-stream-id": "0",
-#       }].
+#       }.
 #    }
 #}
 import os, json

@@ -95,12 +95,12 @@ if __name__ == "__main__":
         #   "dlFolder": "/srv/government",
         #   "accountID": "123456",
         #   "streams": {
-        #       "stream-1": [{
+        #       "stream-1": {
         #           "id": "123456",
         #           "name": "City Council",
         #           "subFolder": "city-council",
         #           "prev-stream-id": "0",
-        #       }].
+        #       }.
         #    }
         #}
         with open("settings.json", "r") as settingsFile:
