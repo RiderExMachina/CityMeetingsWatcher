@@ -1,7 +1,7 @@
 # == City Meeting Watcher script == #
 ## Watches Livestream.com accounts for updates
-##  and pipes them through yt-dlp to archive them.
-## TODO: Also converts videos to audio through ffmpeg
+##  and pipes them through yt-dlp to archive them
+## and then converts the videos to audio through ffmpeg
 
 import json, os
 
@@ -28,7 +28,7 @@ def vidConvert(dlFolder):
             if ".mp4" in vid:
                 infile = os.path.join(currentFolder, vid)
                 outfile = os.path.join(audioFolder, vid.replace("mp4", "mp3"))
-                print(f'\t- Converting {vid} to {vid.replace("mp3", "mp3")}')
+                print(f'\t\t- Converting {vid} to {vid.replace("mp3", "mp3")}')
                 ## the -n flag automatically answers "no" to any prompts
                 os.system(f'ffmpeg -i "{infile}" -map 0 -map -0:v -af silenceremove=1:0:-30dB,volume=2 "{outfile}" -n')
                 print(f"\t\t- Done!")
@@ -76,12 +76,7 @@ def infoParse(info):
             json.dump(info, settingsFile, indent=4)
         print("Updated settings.json file with new previous stream ID.")
 
-# url = "https://api.new.livestream.com/accounts/11220190/events/3725902"
-## Livestream IDs
-##  City Council: 3725902
-##  URA         : 3725864
-##  Plan & Zone : 6554264
-version = "0.1.0"
+version = "0.1.1"
 if __name__ == "__main__":
     ## Pull cached upload date
     ## Go through setup "wizard" if first run.
