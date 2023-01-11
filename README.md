@@ -31,7 +31,7 @@ Once the `settings.json` file is created, feel free to use `cron` or `systemd` t
 ### [Running](#running)
 Feel free to run the script after the wizard has been run to verify everything is working and prime the `prev-stream-id` entry in `settings.json`, otherwise I'd just let the system run the script on the timer.
 
-### [Contributing]
+### [Contributing](#contributing)
 Contributions would be helpful. There are a few things I want to do with this script, including adding an archive mode that will archive more than just one video at a time, or a cleaning mode in case the script is being ran on a server with limited space (cough, cough). Please keep these in mind:
 
 1. Python uses camelCase, but JSON uses kebab-case.
