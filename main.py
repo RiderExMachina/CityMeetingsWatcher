@@ -26,12 +26,16 @@ def vidConvert(dlFolder):
 
         for vid in os.listdir(f"{currentFolder}"):
             if ".mp4" in vid:
-                infile = os.path.join(currentFolder, vid)
-                outfile = os.path.join(audioFolder, vid.replace("mp4", "mp3"))
-                print(f'\t\t\t- Converting {vid} to {vid.replace("mp3", "mp3")}')
-                ## the -n flag automatically answers "no" to any prompts
-                os.system(f'ffmpeg -i "{infile}" -map 0 -map -0:v -af silenceremove=1:0:-30dB,volume=2 "{outfile}" -n')
-                print(f"\t\t\t- Done!")
+                audio = vid.replace("mp4", "mp3")
+                if audio not in os.listdir(audioFolder):
+                    infile = os.path.join(currentFolder, vid)
+                    outfile = os.path.join(audioFolder, audio)
+                    print(f'\t\t\t- Converting "{vid}" to "{audio}"')
+                    ## the -n flag automatically answers "no" to any prompts
+                    os.system(f'ffmpeg -i "{infile}" -map 0 -map -0:v -af silenceremove=1:0:-30dB,volume=2 "{outfile}" -n')
+                    print("\t\t\t- Done!")
+                #else:
+                    #print(f'\t\t\t- "{audio}" already exists, skipping!')
 
 def updateCheck(account, event):
         url = f"https://api.new.livestream.com/accounts/{account}/events/{event}"
@@ -76,7 +80,7 @@ def infoParse(info):
             json.dump(info, settingsFile, indent=4)
         print("Updated settings.json file with new previous stream ID.")
 
-version = "0.1.1"
+version = "0.1.2"
 if __name__ == "__main__":
     ## Pull cached upload date
     ## Go through setup "wizard" if first run.
