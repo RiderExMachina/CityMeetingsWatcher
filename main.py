@@ -3,9 +3,9 @@
 ##  and pipes them through yt-dlp to archive them
 ## and then converts the videos to audio through ffmpeg
 
-import json, os, logging
+import json, os, logging, datetime
 
-logging.basicConfig(filename="citymeetingwatcher.log", encoding="utf-8", level=logging.INFO)
+logging.basicConfig(filename=f"citymeetingwatcher{datetime.datetime.now().strftime('%Y-%m')}.log", encoding="utf-8", level=logging.INFO)
 
 def relay(msg):
     print(msg)
@@ -85,8 +85,9 @@ def infoParse(info):
             json.dump(info, settingsFile, indent=4)
         relay("Updated settings.json file with new previous stream ID.")
 
-version = "0.1.3"
+version = "0.1.4"
 if __name__ == "__main__":
+    relay(f"- Started on {datetime.datetime.now().strftime('%Y-%m-%d at %H:%M')}")
     ## Pull cached upload date
     ## Go through setup "wizard" if first run.
     if not os.path.isfile("settings.json"):
@@ -97,3 +98,4 @@ if __name__ == "__main__":
         with open("settings.json", "r") as settingsFile:
             info = json.load(settingsFile)
         infoParse(info)
+    relay(f"- Started at {datetime.datetime.now().strftime('%Y-%B-%d at %H:%M')}")
