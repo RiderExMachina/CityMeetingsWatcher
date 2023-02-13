@@ -5,7 +5,7 @@
 
 import json, os, logging, datetime
 
-logging.basicConfig(filename=f"citymeetingwatcher{datetime.datetime.now().strftime('%Y-%m')}.log", encoding="utf-8", level=logging.INFO)
+logging.basicConfig(filename=f"citymeetingwatcher-{datetime.datetime.now().strftime('%Y-%m')}.log", encoding="utf-8", level=logging.INFO)
 
 def relay(msg):
     print(msg)
@@ -98,4 +98,4 @@ if __name__ == "__main__":
         with open("settings.json", "r") as settingsFile:
             info = json.load(settingsFile)
         infoParse(info)
-    relay(f"- Started at {datetime.datetime.now().strftime('%Y-%B-%d at %H:%M')}")
+    relay(f"- Started at {datetime.datetime.now().strftime('%Y-%m-%d at %H:%M')}")
