@@ -98,4 +98,4 @@ if __name__ == "__main__":
         with open("settings.json", "r") as settingsFile:
             info = json.load(settingsFile)
         infoParse(info)
-    relay(f"- Started at {datetime.datetime.now().strftime('%Y-%m-%d at %H:%M')}")
+    relay(f"- Finished at {datetime.datetime.now().strftime('%Y-%m-%d at %H:%M')}")
