@@ -48,8 +48,14 @@ def updateCheck(account, event):
 
         ## Get latest Upload
         latestMeeting = data["feed"]["data"][0]
+        ## Second to Last Meeting
+        stlMeeting = data["feed"]["data"][1]
         meetingID = latestMeeting["data"]["id"]
-        return meetingID
+        stlmID = latestMeeting["data"]["id"]
+        return stlmID, meetingID
+
+def getStreamURL(account, event, video):
+    return videoURL = f"https://livestream.com/accounts/{account}/events/{event}/videos/{video}"
 
 def infoParse(info):
     relay("Loading data...")
@@ -68,12 +74,18 @@ def infoParse(info):
         destFolder = os.path.join(dlFolder, subFolder)
         checkFolders(destFolder)
         ## Get newest meeting ID
-        meetingID = updateCheck(account, event)
+        stlmID, meetingID = updateCheck(account, event)
 
         if meetingID != prevMeeting:
             updated = True
             relay(f"\t\t- Looks like there was an update! (Current: {meetingID}, Previous: {prevMeeting})")
-            videoURL = f"https://livestream.com/accounts/{account}/events/{event}/videos/{meetingID}"
+            if stlmID != prevMeeting:
+                relay(f"\t\t\t- There may have been a special meeting? ({stmlID})")
+                videoURL = getStreamURL(account, event, stmlID)
+                os.system(f'yt-dlp -o "{destFolder}/%(upload_date>%Y-%m-%d)s - {name} Meeting.%(ext)s" {videoURL}')
+
+            ## No else block needed
+            videoURL = getStreamURL(account, event, meetingID)
             os.system(f'yt-dlp -o "{destFolder}/%(upload_date>%Y-%m-%d)s - {name} Meeting.%(ext)s" {videoURL}')
             info["streams"][i]["prev-stream-id"] = meetingID
         else:
@@ -98,4 +110,3 @@ if __name__ == "__main__":
         with open("settings.json", "r") as settingsFile:
             info = json.load(settingsFile)
         infoParse(info)
-    relay(f"- Finished at {datetime.datetime.now().strftime('%Y-%m-%d at %H:%M')}")
