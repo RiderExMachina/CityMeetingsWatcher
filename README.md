@@ -1,5 +1,8 @@
 # City Meeting Watcher
+## No Longer Active
+Livestream.com was recently purchased by Vimeo, which has killed the public API. My city now posts their videos on Youtube, which works better for me. I may update this script to archive Youtube videos in the future, but this script is now no longer relevant.
 
+## Original Readme
 Version 0.1.1 watches one or more Livestream.com accounts/"events", downloads them using yt-dlp, and ffmpeg. Currently only works with Livestream.com.
 
 ### [Setup](#setup)
